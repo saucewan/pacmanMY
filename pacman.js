@@ -1,5 +1,5 @@
 // JavaScript Document
-var screenH=screen.width;
+var screenH=window.innerWidth;
 var size;
 var mapsize;
 var cellSize;
