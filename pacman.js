@@ -61,6 +61,9 @@ function refreshMap(){
 	rdmGhostLoc();	
 	move();
 	whetherMeet();
+	showTime();
+	showScore();
+	showLife();
 	
 }
 
@@ -365,6 +368,19 @@ function rdmGhostLoc(){
 	}else
 		return;
 }
+
+function showLife(){
+	document.getElementById("life").innerHTML="Life: "+life;		
+}
+
+function showScore(){
+	document.getElementById("score").innerHTML="Score: 0";		
+}
+
+function showTime(){
+	document.getElementById("time").innerHTML="Time: 0";		
+}
+
 
 CanvasRenderingContext2D.prototype.ghost = function(x,y){	
 	this.save();
