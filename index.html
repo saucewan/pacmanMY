@@ -11,14 +11,38 @@
 <body>
 <div id="buttons">
 <input type="button" name="start" onclick="start()" value="Start">
+<input type="button" name="stop" onclick="end()" value="End">
 <input type="radio" name="chooseSize" id="sSize" checked="checked" value="25">25X25</input>
 <input type="radio" name="chooseSize" id="LSize" value="40">40X40</input>
 
 </div>
-
+<div>
 <canvas id="canvas" tabIndex="0">
 Your browser does not support the canvas element.</canvas>
 <script type="text/javascript" src="pacman.js"></script>
-
+<div>
+<table id="toolBar">
+        <tr><td>
+            <div class="info" id="time"></div>
+        </td></tr>
+        
+        <tr><td>
+            <div class="info" id="score"></div>    
+        </td></tr>
+        <tr><td>
+            <div class="info" id="life"></div>  	
+        </td></tr>
+        <tr><td>
+        	<input class="dirButton" id="up" name="up" type="button" onclick="upOnClick()"/>
+        </td></tr>
+        <tr><td>
+        	<input class="dirButton" id="left" name="left" type="button" onclick="leftOnClick()"/>
+            <input class="dirButton" id="down" name="down" type="button" onclick="downOnClick()"/>
+            <input class="dirButton" id="right" name="right" type="button" onclick="rightOnClick()"/>
+        </td></tr>
+       
+    
+    </table>
+</div>
 </body>
 </html>
