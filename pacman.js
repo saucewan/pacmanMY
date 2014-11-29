@@ -1,5 +1,6 @@
 // JavaScript Document
 var screenH=window.innerWidth;
+var screenHH=window.innerHeight;
 var size;
 var mapsize;
 var cellSize;
@@ -30,7 +31,7 @@ var buttons=document.getElementById("buttons");
 function welcome(){
 		
 	cover.style.width=screenH.toString()+"px";
-	cover.style.height=screenH.toString()+"px";
+	cover.style.height=screenHH.toString()+"px";
 	cover.style.visibility="visible";	
 }
 
