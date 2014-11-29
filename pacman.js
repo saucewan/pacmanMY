@@ -12,19 +12,126 @@ var timeCounter =1.0;
 var x;
 var y;
 var a,b,c,d,g,f;
-var ghost_x;
-var ghost_y;
-var direction=0;
+var ghost_x=new Array();
+var ghost_y=new Array();
+var direction=[0,0,0];
 var life=5;
+var score=0;
 var canvas = document.getElementById("canvas");
 var refreshInterval;
 var manDir=-1;
+var timer=180;
+var cover=document.getElementById("cover");
+var name;
+var divSize=document.getElementById("sizeSelect");
+var dirbutton=document.getElementsByClassName("dirButton");
+var buttons=document.getElementById("buttons");
+
+function welcome(){
+		
+	cover.style.width=screenH.toString()+"px";
+	cover.style.height=screenH.toString()+"px";
+	cover.style.visibility="visible";	
+}
 
 function end(){
 	location.reload();
 }
 
+function oldPlayer(){
+	name=document.getElementById("existname").value;
+	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/loginExist.php?existname="+name;
+	
+		try
+		{
+			asyncRequest=new XMLHttpRequest();
+			asyncRequest.onreadystatechange = loginAlready;
+			asyncRequest.open( 'GET', url, true );
+			asyncRequest.send( null );
+		}
+		catch(exception)
+		{
+			alert("Request Failed");
+		}		
+}
+
+function checkForm(){
+	var username1=document.getElementById("username").innerHTML;
+	var choosegender=document.getElementsByName("gender");
+	var chooseagegroup=document.getElementsByName("agegroup");
+	
+	var gender;
+	var agegroup;
+	
+	if(choosegender[0].checked)
+		gender=choosegender[0].value;
+	else if(choosegender[1].checked)
+		gender=choosegender[1].value;
+		
+	if(chooseagegroup[0].checked)
+		agegroup=chooseagegroup[0].value;
+	else if(chooseagegroup[1].checked)
+		agegroup=chooseagegroup[1].value;
+	else if(chooseagegroup[2].checked)
+		agegroup=chooseagegroup[2].value;
+			
+	if(username1=="× Name existed")
+		alert("Please change to another name");
+	else if(username1=="√ Valid"){
+		var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/login.php?name="+name+"&agegroup="+agegroup+"&gender="+gender;
+	
+		try
+		{
+			asyncRequest=new XMLHttpRequest();
+			asyncRequest.onreadystatechange = loginAlready;
+			asyncRequest.open( 'GET', url, true );
+			asyncRequest.send( null );
+		}
+		catch(exception)
+		{
+			alert("Request Failed");
+		}	
+	}		
+	
+}
+
+function loginAlready(){
+	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200){
+		cover.style.visibility="hidden";
+		divSize.style.visibility="visible";
+		buttons.style.visibility="visible";
+		document.getElementById("PlayerInGame").innerHTML="Welcome! "+name+"!";
+	}
+}
+
+function validateName(query){
+	name=query;
+	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/validateName.php?query="+query;
+	
+	try
+	{
+		asyncRequest=new XMLHttpRequest();
+		asyncRequest.onreadystatechange = processResponse;
+		asyncRequest.open( 'GET', url, true );
+		asyncRequest.send( null );
+	}
+	catch(exception)
+	{
+		alert("Request Failed");
+	}	
+}
+
+function processResponse(){
+	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200 && asyncRequest.responseText){
+		document.getElementById("username").innerHTML=asyncRequest.responseText;	
+	}
+}
+
 function start(){
+	divSize.style.visibility="hidden";
+	for(var i =0, il = dirbutton.length;i<il;i++){
+     dirbutton[i].style.visibility = "visible";
+    }
 	var chooseSize=document.getElementsByName("chooseSize");
 	if(chooseSize[0].checked)
 		size=24;
@@ -43,9 +150,8 @@ function start(){
 	getCross();
 	drawmap();
 	ghostInitial();
-	
 
-	refreshInterval=setInterval(refreshMap, 150);
+	refreshInterval=setInterval(refreshMap, 200);
 	
 	putPacman();
 	canvas.focus(); 
@@ -57,8 +163,10 @@ function refreshMap(){
 	drawmap();
 	putPacman();
 	
-	putGhost(this.ghost_x, this.ghost_y);
-	rdmGhostLoc();	
+	putGhost();
+	rdmGhostLoc(0);
+	rdmGhostLoc(1);
+	rdmGhostLoc(2);
 	move();
 	whetherMeet();
 	showTime();
@@ -152,6 +260,10 @@ function getCross(){
 					crossRoad[i][j]=1;
 		}
 	}
+	
+	crossRoad[size/2][size/2]=0;
+	crossRoad[size/2][size/2-1]=0;
+	crossRoad[size/2][size/2+1]=0;
 }	
 
 function doKeyDown(e) { 
@@ -177,28 +289,45 @@ function move() {
 
 	switch(manDir){
 		case 1:	
-		if(mapArr[b][c]!=1 && y<mapsize*cellSize-cellSize){
-			mapArr[b][c]=0;
-			y += cellSize;}
+			if(mapArr[b][c]!=1 && y<mapsize*cellSize-cellSize){
+				if(mapArr[b][c]==-1){
+					mapArr[b][c]=0;
+					score++;
+				}
+				y += cellSize;
+			}
 			break;
 			
     	case 0:
-		if(mapArr[f][c]!=1 && y>cellSize/2){
-			mapArr[f][c]=0;
-			y -= cellSize;}	
+			if(mapArr[f][c]!=1 && y>cellSize/2){
+				if(mapArr[f][c]==-1){
+					mapArr[f][c]=0;
+					score++;
+				}
+				y -= cellSize;
+			}	
 			break;
 			
 		case 2:
-		if(mapArr[d][g]!=1 && x>cellSize/2){
-			mapArr[d][g]=0
-			x -= cellSize;}
+			if(mapArr[d][g]!=1 && x>cellSize/2){
+				if(mapArr[d][g]==-1){	
+					mapArr[d][g]=0;
+					score++;
+				}
+				x -= cellSize;
+			}
 			break;
 				
 		case 3:
-		 if(mapArr[d][a]!=1 && x<mapsize*cellSize-cellSize){
-			mapArr[d][a]=0;
-			x += cellSize;}
-			break;	
+			if(mapArr[d][a]!=1 && x<mapsize*cellSize-cellSize){
+				if(mapArr[d][a]==-1){
+					mapArr[d][a]=0;
+					score++;
+				}
+				x += cellSize;
+			}
+			break;
+				
 		default:
 			return;
 	}
@@ -207,12 +336,14 @@ function move() {
 
 
 function whetherMeet(){
-	if((ghost_x==x-cellSize/2)&&(ghost_y==y-cellSize/2)){
-		alert("You have been catched");
-		life--;
-		if(life==0){
-			alert("Game Over");
-			clearInterval(refreshInterval);
+	for(var i=0;i<3;i++){
+		if((ghost_x[i]==x-cellSize/2)&&(ghost_y[i]==y-cellSize/2)){
+			alert("You have been catched");
+			life--;
+			if(life==0){
+				alert("Game Over");
+				clearInterval(refreshInterval);
+			}
 		}
 	}
 }
@@ -276,88 +407,105 @@ function putPacman(){
 }
 
 function ghostInitial(){
-	ghost_x=size/2*cellSize;
-	ghost_y=size/2*cellSize;
+	ghost_x[0]=size/2*cellSize;
+	ghost_y[0]=size/2*cellSize;
+	
+	ghost_x[1]=(size/2-1)*cellSize;
+	ghost_y[1]=size/2*cellSize;
+	
+	ghost_x[2]=(size/2+1)*cellSize;
+	ghost_y[2]=size/2*cellSize;
 }
 
-function putGhost(g_x,g_y){
-	cxt.beginPath();
-	cxt.fillStyle="#800080";
-	cxt.ghost(g_x,g_y).fill();
-
-	cxt.closePath(); 
-	cxt.fill();
+function putGhost(){
+	
+		cxt.beginPath();
+		cxt.fillStyle="#800080";
+		cxt.ghost(ghost_x[0],ghost_y[0]).fill();
+	
+		cxt.closePath(); 
+		cxt.fill();
+		
+		cxt.beginPath();
+		cxt.fillStyle="#800000";
+		cxt.ghost(ghost_x[1],ghost_y[1]).fill();
+	
+		cxt.closePath(); 
+		cxt.fill();
+		
+		cxt.beginPath();
+		cxt.fillStyle="#800060";
+		cxt.ghost(ghost_x[2],ghost_y[2]).fill();
+	
+		cxt.closePath(); 
+		cxt.fill();
 	
 	
 }
 
-function rdmGhostLoc(){
-	if((timeCounter>20)&&(timeCounter<22)){				
-		ghost_y=ghost_y-cellSize;
-	}
-	else if(timeCounter>=22){
-		if((ghost_y/cellSize%1==0)&&(ghost_x/cellSize%1==0)){
-			if(crossRoad[ghost_y/cellSize][ghost_x/cellSize]==1){
+function rdmGhostLoc(i){
+	if(timeCounter>15*(i+1)){
+		if((ghost_y[i]/cellSize%1==0)&&(ghost_x[i]/cellSize%1==0)){
+			if(crossRoad[ghost_y[i]/cellSize][ghost_x[i]/cellSize]==1){
 				
-				direction=Math.floor(Math.random()*4);
+				direction[i]=Math.floor(Math.random()*4);
 			}
 			
-			if((ghost_y/cellSize==11)&&(ghost_x/cellSize==12))
-				direction=0;
+			if((ghost_y[i]/cellSize==11)&&(ghost_x[i]/cellSize==12)||(ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==12))
+				direction[i]=0;
 				
-			if((ghost_y/cellSize==12)&&(ghost_x/cellSize==0)||(ghost_y/cellSize==12)&&(ghost_x/cellSize==15))
-				direction=2;
+			if((ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==0)||(ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==15)||(ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==11))
+				direction[i]=2;
 			
-			if((ghost_y/cellSize==12)&&(ghost_x/cellSize==24)||(ghost_y/cellSize==12)&&(ghost_x/cellSize==9))
-				direction=1;
+			if((ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==24)||(ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==9)||(ghost_y[i]/cellSize==12)&&(ghost_x[i]/cellSize==13))
+				direction[i]=1;
 				
-			if((ghost_y/cellSize==14)&&(ghost_x/cellSize==12))
-				direction=3;
+			if((ghost_y[i]/cellSize==14)&&(ghost_x[i]/cellSize==12))
+				direction[i]=3;
 							
 		}
 		
-		//alert("direction:"+direction+"whether cross:"+crossRoad[ghost_y/cellSize][ghost_x/cellSize]);	
 		var counter=0;
 		while(counter<4){
-			switch(direction){
+			switch(direction[i]){
 				//move up
 				case 0:	
-					if((ghost_y>cellSize)&&(mapArr[Math.floor((ghost_y-cellSize)/cellSize)][Math.floor(ghost_x/cellSize)]!=1)){
-						ghost_y=ghost_y-cellSize;
+					if((ghost_y[i]>cellSize)&&(mapArr[Math.floor((ghost_y[i]-cellSize)/cellSize)][Math.floor(ghost_x[i]/cellSize)]!=1)){
+						ghost_y[i]=ghost_y[i]-cellSize;
 						return;
 					}else{
 						counter++;
-						direction=1+direction%4;
+						direction[i]=1+direction[i]%4;
 						break;
 						}
 				//move left		
 				case 1:
-					if((ghost_x>cellSize)&&(mapArr[Math.floor(ghost_y/cellSize)][Math.floor((ghost_x-cellSize)/cellSize)]!=1)){
-						ghost_x=ghost_x-cellSize;
+					if((ghost_x[i]>cellSize)&&(mapArr[Math.floor(ghost_y[i]/cellSize)][Math.floor((ghost_x[i]-cellSize)/cellSize)]!=1)){
+						ghost_x[i]=ghost_x[i]-cellSize;
 						return;
 					}else{
 						counter++;
-						direction=1+direction%4;
+						direction[i]=1+direction[i]%4;
 						break;	
 					}
 				//move right
 				case 2:
-					if((ghost_x<(mapsize-1)*cellSize)&&(mapArr[Math.floor(ghost_y/cellSize)][Math.ceil((ghost_x+cellSize)/cellSize)]!=1)){
-						ghost_x=ghost_x+cellSize;
+					if((ghost_x[i]<(mapsize-1)*cellSize)&&(mapArr[Math.floor(ghost_y[i]/cellSize)][Math.ceil((ghost_x[i]+cellSize)/cellSize)]!=1)){
+						ghost_x[i]=ghost_x[i]+cellSize;
 						return;
 					}else{
 						counter++;
-						direction=1+direction%4;
+						direction[i]=1+direction[i]%4;
 						break;	
 					}
 				//move down					
 				case 3:
-					if((ghost_y<(mapsize-1)*cellSize)&&(mapArr[Math.ceil((ghost_y+cellSize)/cellSize)][Math.floor(ghost_x/cellSize)]!=1)){
-						ghost_y=ghost_y+cellSize;
+					if((ghost_y[i]<(mapsize-1)*cellSize)&&(mapArr[Math.ceil((ghost_y[i]+cellSize)/cellSize)][Math.floor(ghost_x[i]/cellSize)]!=1)){
+						ghost_y[i]=ghost_y[i]+cellSize;
 						return;	
 					}else{
 						counter++;
-						direction=1+direction%4;
+						direction[i]=1+direction[i]%4;
 						break;	
 					}
 			}
@@ -374,11 +522,14 @@ function showLife(){
 }
 
 function showScore(){
-	document.getElementById("score").innerHTML="Score: 0";		
+	document.getElementById("score").innerHTML="Score: "+score;		
 }
 
 function showTime(){
-	document.getElementById("time").innerHTML="Time: 0";		
+	if(timeCounter%5==0){
+		timer--;
+		document.getElementById("time").innerHTML="Time: "+timer;
+	}
 }
 
 

@@ -1,15 +1,110 @@
 @charset "UTF-8";
 /* CSS Document */
 #toolBar{
-		position:relative;
-		top:0px;
-		text-align:center;
-		width:200px;
-		padding:20px;
-		
-		}
+	position:relative;
+	top:0px;
+	text-align:center;
+	width:200px;
+	padding:20px;
+}
 		
 .dirButton{
-	width:27px;	
-	height:27px;
+	width:50px;	
+	height:50px;
+	visibility:hidden;
 }
+
+#cover{
+	position:absolute;
+	opacity:0.7;
+	z-index:1;
+	width:550px;
+	height:550px;
+	visibility:hidden;
+	text-align:left;	
+	background:#000;
+}
+
+.item{
+	position:relative;
+	left:0px;
+	top: 0px;
+	color:#699;
+	line-height:35px;
+	font-size:20px;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;		
+}
+
+#loginbutton{
+	position:relative;
+	top:20px;
+	text-align:center;
+	width:550px;
+	height:40px;	
+}
+
+#loginsubmit{
+	width:80px;
+	height:30px;
+	font-size:16px;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+	color:#369;	
+}
+
+table{
+	position:relative;
+	left:30px;
+	top:5px;	
+}
+
+#username{
+	position:relative;
+	line-height:10px;
+	font-size:12px;
+	color:#F30;
+}
+
+h2{
+	color:#F93;
+	text-align:center;
+	font-weight:1000;
+	font-family:Impact, Haettenschweiler, "Franklin Gothic Bold", "Arial Black", sans-serif;
+	
+}
+
+#existingUser{
+	position:relative;
+	top:30px;	
+}
+
+#existlogin{
+	position:relative;
+	text-align:center;
+}
+
+#existsubmit{
+	width:200px;
+	height:30px;
+	font-size:16px;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+	color:#369;
+}
+
+h3{
+	color:#F90;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+	position:relative;
+	left:30px;
+		
+}
+
+#sizeSelect{
+	visibility: hidden;	
+}
+
+#buttons{
+	visibility: hidden;
+	
+}
+
+
