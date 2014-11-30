@@ -15,18 +15,25 @@ body{
 	width:80%;	
 }
 
+table{
+	width:100%;
+	font-size:100%;
+	height:20%;	
+}
+
 .button{
 	background-color:#ed8223;
 	color:#fff;
 	font-family:'Helvetica Neue',sans-serif;
-	font-size:70%;
+	font-size:100%;
 	line-height:10px;
 	border-radius:60px;
 	-webkit-border-radius:60px;
 	-moz-border-radius:20px;
 	border:0;
 	text-shadow:#C17C3A 0 -1px 0;
-	
+	width:100%;
+	height:50%;
 }
 
 #buttons{
@@ -36,5 +43,7 @@ body{
 
 td{
 	text-align:start;
-	vertical-align:top;	
+	vertical-align:top;
+	height:50%;
 }
+
