@@ -59,7 +59,7 @@ function stopit(){
 	
 }
 
-function end(){
+function endgame(){
 	location.reload();	
 }
 
