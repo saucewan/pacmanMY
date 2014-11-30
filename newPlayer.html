@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>newPlayer</title>
+<link rel = "stylesheet" type = "text/css" href ="newPlayer.css"/>
+<script type="text/javascript" src="newplayer.js"></script>
+</head>
+
+<body>
+<form id="newform" action="pacman.html">
+	<table>
+    <tr><td>
+    <div id="title">
+    New Player
+    </div>
+    </td></tr>
+    <tr><td>
+    <div class="item">    
+	Your Name: <input type="text" name="name" id="name" onblur="validateName(this.value)"/>
+	</div>
+    <div id="username"></div>
+    </td>
+    </tr>
+    <tr><td>
+    <div class="item">
+	Gender: 
+    <input type="radio" name="gender" id="male" checked="checked" value="0"> Male</input>
+    <input type="radio" name="gender" id="female" value="1"> Female</input>
+    </div>
+    </td></tr>
+    <tr><td>
+    <div class="item">
+	Age Group: <br/>
+    <input type="radio" name="agegroup" id="agegroup0" checked="checked" value="0"> Below 20</input><br/>
+    <input type="radio" name="agegroup" id="agegroup1" value="1"> 20 to 40</input><br/>
+    <input type="radio" name="agegroup" id="agegroup2" value="2"> Above 40</input> 
+    </div>
+    </td></tr>
+    <tr><td>
+    <input name="login" class="button" id="loginsubmit" type="button" onclick="checkForm()" value="Play"/>
+    </td></tr>
+    <tr><td>
+    </td></tr>
+    </table>
+    </form>
+</body>
+</html>

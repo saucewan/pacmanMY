@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pac-Man</title>
+<link rel = "stylesheet" type = "text/css" href ="PMstyle.css"/>
+</head>
+<body onLoad="welcome()">
+<div id="buttons">
+<input type="button" name="start" class="button" onclick="start()" value="Start">
+<input type="button" name="stop" class="button" onclick="stopgame()" value="Stop">
+<input type="button" name="end" class="button" onclick="endgame()" value="End">
+<input type="radio" name="chooseSize" id="sSize" checked="checked" value="25">25X25</input>
+<input type="radio" name="chooseSize" id="LSize" value="40">40X40</input>
+</div>
+
+<div id="cover">
+
+Welcome to game!<br/>
+
+</div>
+<canvas id="canvas" tabIndex="0">
+Your browser does not support the canvas element.</canvas>
+<script type="text/javascript" src="pacman.js"></script>
+</div>
+
+<div>
+<table id="toolBar">
+        <tr>
+        <td width=30%>
+            <div class="info" id="time"></div>
+        </td>
+        <td width=30%>
+            <div class="info" id="score"></div>    
+        </td>
+        <td width=30%>
+            <div class="info" id="life"></div>  	
+        </td>
+        <td></td>        
+        <td>
+        	<input class="dirButton" id="up" name="up" type="button" onclick="upOnClick()"/>
+        </td></tr>
+        <tr>
+        <td><div id="player"></div></td>
+        <td><input type="button" id="home" onclick="location.href='index.html'" value="Home"></td>
+        <td></td>
+        <td>
+        	<input class="dirButton" id="left" name="left" type="button" onclick="leftOnClick()"/>
+        </td>
+        <td>
+            <input class="dirButton" id="down" name="down" type="button" onclick="downOnClick()"/>
+            </td>
+            <td>
+            <input class="dirButton" id="right" name="right" type="button" onclick="rightOnClick()"/>
+            </td>
+        </td></tr>
+       
+    
+    </table>
+</div>
+
+</body>
+</html>

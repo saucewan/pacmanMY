@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+  <link rel = "stylesheet" type = "text/css" href ="chart.css"/>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+   	
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+var type;
+var data_arr=new Array();
+var choosegender=document.getElementsByName("choosegender");
+var chooseagegroup=document.getElementsByName("chooseagegroup");
+
+function genderData(){
+	
+	if(choosegender[0].checked)
+		type=1;
+	else if(choosegender[1].checked)
+		type=2;
+	getData();
+}
+
+function ageData(){
+	if(chooseagegroup[0].checked)
+		type=3;
+	else if(chooseagegroup[1].checked)
+		type=4;
+	else if(chooseagegroup[2].checked)
+		type=5;
+	getData();
+}
+
+function allData(){
+	type=0;
+	getData();
+}
+
+function getData(){
+	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/topchart.php?type="+type;
+	
+	try
+	{
+		asyncRequest=new XMLHttpRequest();
+		asyncRequest.onreadystatechange = dataa;
+		asyncRequest.open( 'GET', url, true );
+		asyncRequest.send(null);
+	}
+	catch(exception)
+	{
+		alert("Request Failed");
+	}	
+}
+
+function dataa(){
+	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200 && asyncRequest.responseText){
+		data_arr=JSON.parse(asyncRequest.responseText);
+		if(data_arr.length>0)
+			drawChart();
+		else
+			alert("Empty");
+	}
+}
+
+
+function drawChart() {
+	
+	var temp=new Array();
+	for(var i=0;i<data_arr.length+1;i++){
+		temp[i]=new Array();	
+	}
+	
+	temp[0][0]='Name';
+	temp[0][1]='Score';
+	for(var i=0;i<data_arr.length;i++){
+		temp[i+1][0]=data_arr[i][0];
+		temp[i+1][1]=parseInt(data_arr[i][1]);	
+	}
+	
+	 var data = google.visualization.arrayToDataTable(temp);
+
+  var options = {
+    title: 'Top 5 Score',
+    hAxis: {title: 'Name', titleTextStyle: {color: 'red'}}
+  };
+
+  var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+
+}
+    </script>
+  </head>
+  <body>
+  <div id="buttons">
+  <table>
+  <tr><td>
+  	<input type="button" class="button" id="overall" value="Overall" onclick="allData()"/>
+   </td>
+   <td>
+    <input type="button" class="button" id="gender" value="By Gender" onclick="genderData()"/><br/>
+    <input type="radio" name="choosegender" id="male" checked="checked" value="0">Male</input>
+    <br/>
+<input type="radio" name="choosegender" id="female" value="1">Female</input>
+</td>
+<td>
+    <input type="button" class="button" id="agegroup" value="By Age Group" onclick="ageData()"/>
+    <br/>
+    <input type="radio" name="chooseagegroup" id="agegroup0" checked="checked" value="0"> Below 20</input><br/>
+    <input type="radio" name="chooseagegroup" id="agegroup1" value="1"> 20 to 40</input><br/>
+    <input type="radio" name="chooseagegroup" id="agegroup2" value="2"> Above 40</input> 
+</td>
+</tr>
+</table>
+    </div>
+    <div id="chart_div"></div>
+  </body>
+</html>

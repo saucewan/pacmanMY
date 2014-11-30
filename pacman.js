@@ -8,7 +8,6 @@ var canvas = document.getElementById("canvas");
 var cxt = canvas.getContext("2d");
 var mapArr=new Array();
 var crossRoad=new Array();
-var mainChar = [1, 0];
 var timeCounter =1.0;
 var x;
 var y;
@@ -24,112 +23,50 @@ var manDir=-1;
 var timer=180;
 var cover=document.getElementById("cover");
 var name;
-var divSize=document.getElementById("sizeSelect");
 var dirbutton=document.getElementsByClassName("dirButton");
-var buttons=document.getElementById("buttons");
+
 
 function welcome(){
-		
-	cover.style.width=screenH.toString()+"px";
-	cover.style.height=screenHH.toString()+"px";
-	cover.style.visibility="visible";	
+	cover.style.visibility="visible";
+	
+	if (location.search) {
+		var parts = location.search.substring(1).split('&');
+   
+		var nv = parts[0].split('=');
+		name= nv[1];
+		document.getElementById("player").innerHTML="Player: "+name;
+	}	
 }
 
-function end(){
-	location.reload();
-}
-
-function oldPlayer(){
-	name=document.getElementById("existname").value;
-	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/loginExist.php?existname="+name;
-	
-		try
-		{
-			asyncRequest=new XMLHttpRequest();
-			asyncRequest.onreadystatechange = loginAlready;
-			asyncRequest.open( 'GET', url, true );
-			asyncRequest.send( null );
-		}
-		catch(exception)
-		{
-			alert("Request Failed");
-		}		
-}
-
-function checkForm(){
-	var username1=document.getElementById("username").innerHTML;
-	var choosegender=document.getElementsByName("gender");
-	var chooseagegroup=document.getElementsByName("agegroup");
-	
-	var gender;
-	var agegroup;
-	
-	if(choosegender[0].checked)
-		gender=choosegender[0].value;
-	else if(choosegender[1].checked)
-		gender=choosegender[1].value;
-		
-	if(chooseagegroup[0].checked)
-		agegroup=chooseagegroup[0].value;
-	else if(chooseagegroup[1].checked)
-		agegroup=chooseagegroup[1].value;
-	else if(chooseagegroup[2].checked)
-		agegroup=chooseagegroup[2].value;
-			
-	if(username1=="× Name existed")
-		alert("Please change to another name");
-	else if(username1=="√ Valid"){
-		var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/login.php?name="+name+"&agegroup="+agegroup+"&gender="+gender;
-	
-		try
-		{
-			asyncRequest=new XMLHttpRequest();
-			asyncRequest.onreadystatechange = loginAlready;
-			asyncRequest.open( 'GET', url, true );
-			asyncRequest.send( null );
-		}
-		catch(exception)
-		{
-			alert("Request Failed");
-		}	
-	}		
-	
-}
-
-function loginAlready(){
-	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200){
-		cover.style.visibility="hidden";
-		divSize.style.visibility="visible";
-		buttons.style.visibility="visible";
-		document.getElementById("PlayerInGame").innerHTML="Welcome! "+name+"!";
-	}
-}
-
-function validateName(query){
-	name=query;
-	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/validateName.php?query="+query;
+function stopgame(){
+	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/end.php?name="+name+"&score="+score;
 	
 	try
 	{
 		asyncRequest=new XMLHttpRequest();
-		asyncRequest.onreadystatechange = processResponse;
+		asyncRequest.onreadystatechange = stopit;
 		asyncRequest.open( 'GET', url, true );
 		asyncRequest.send( null );
 	}
 	catch(exception)
 	{
 		alert("Request Failed");
-	}	
-}
-
-function processResponse(){
-	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200 && asyncRequest.responseText){
-		document.getElementById("username").innerHTML=asyncRequest.responseText;	
 	}
 }
 
+function stopit(){
+	clearInterval(refreshInterval);
+	
+}
+
+function end(){
+	location.reload();	
+}
+
+
+
 function start(){
-	divSize.style.visibility="hidden";
+	cover.style.visibility="hidden";
 	for(var i =0, il = dirbutton.length;i<il;i++){
      dirbutton[i].style.visibility = "visible";
     }

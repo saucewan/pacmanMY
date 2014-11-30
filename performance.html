@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>performance</title>
+<link rel = "stylesheet" type = "text/css" href ="performance.css"/>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+   	
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+
+var name;
+var data_arr=new Array();
+
+function getData(){
+	name=document.getElementById("existname").value;
+	var url="http://www2.comp.polyu.edu.hk/~12130691d/pacman/performance.php?name="+name;
+	
+	try
+	{
+		asyncRequest=new XMLHttpRequest();
+		asyncRequest.onreadystatechange = dataa;
+		asyncRequest.open( 'GET', url, true );
+		asyncRequest.send(null);
+	}
+	catch(exception)
+	{
+		alert("Request Failed");
+	}	
+}
+
+function dataa(){
+	if ( asyncRequest.readyState == 4 && asyncRequest.status == 200 && asyncRequest.responseText){
+		data_arr=JSON.parse(asyncRequest.responseText);
+		if(data_arr.length>0)
+			drawChart();
+		else
+			alert("Empty");
+	}
+}
+
+
+function drawChart() {
+	
+	var temp=new Array();
+	for(var i=0;i<data_arr.length+1;i++){
+		temp[i]=new Array();	
+	}
+	
+	temp[0][0]='Date';
+	temp[0][1]='Average Score';
+	for(var i=0;i<data_arr.length;i++){
+		temp[i+1][0]=data_arr[i][0];
+		temp[i+1][1]=parseFloat(data_arr[i][1]);	
+	}
+	
+	 var data = google.visualization.arrayToDataTable(temp);
+
+  var options = {
+    title: 'Daily Average Performance',
+    hAxis: {title: 'Date', titleTextStyle: {color: 'red'}}
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+
+}
+    </script>
+
+</head>
+
+<body>
+<div id="nameinput">
+<table>
+<tr><td>
+<div class="item">
+Your Name:
+</div>
+</td></tr>
+<tr><td>
+<input type="text" name="existname" id="existname"></input>
+</td></tr>
+<tr><td>
+<input name="login" id="existsubmit" type="button" class="button" onclick="getData()" value="View Performance"/>
+</td></tr>
+</table>
+</div>
+<div id="chart_div"></div>
+</body>
+</html>
