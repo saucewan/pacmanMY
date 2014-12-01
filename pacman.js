@@ -55,8 +55,7 @@ function stopgame(){
 }
 
 function stopit(){
-	clearInterval(refreshInterval);
-	
+	clearInterval(refreshInterval);	
 }
 
 function endgame(){
@@ -66,6 +65,11 @@ function endgame(){
 
 
 function start(){
+	life=5;
+	score=0;
+	timer=181;
+	timeCounter =1.0;
+	clearInterval(refreshInterval);
 	cover.style.visibility="hidden";
 	for(var i =0, il = dirbutton.length;i<il;i++){
      dirbutton[i].style.visibility = "visible";
@@ -120,37 +124,51 @@ function setMap(){
 			mapArr[i][j]=-1;	
 		}
 	}
-	
-	for(var i=1;i<=3;i++)
-		for(var j=1;j<=4;j++)
+	var r1=Math.floor(Math.random()*2+3);
+	var r2=Math.floor(Math.random()*2+1);
+	var r3=Math.floor(Math.random()*3+4);
+	var r4=Math.floor(Math.random()*3+1);
+	if((size==24)||(size==40)){
+	for(var i=1;i<=r1;i++)
+		for(var j=1;j<=r3;j++)
 			mapArr[i][j]=1;			
-	for(var i=1;i<=3;i++)
-		for(var j=6;j<=10;j++)
+	for(var i=1;i<=r1;i++)
+		for(var j=r3+2;j<=size/2-2;j++)
 			mapArr[i][j]=1;		
-	for(var i=5;i<=6;i++)
-		for(var j=1;j<=4;j++)
+	for(var i=r1+2;i<=r2+r1+2;i++)
+		for(var j=1;j<=r3;j++)
 			mapArr[i][j]=1;	
-	for(var i=8;i<=11;i++)
-		for(var j=0;j<=4;j++)
+	for(var i=r1+r2+4;i<=size/2-1;i++)
+		for(var j=0;j<=r3;j++)
 			mapArr[i][j]=1;	
-	for(var i=5;i<=10;i++)
-		for(var j=6;j<=7;j++)
+	for(var i=r1+2;i<=size/2-2;i++)
+		for(var j=r3+2;j<=r3+r4+2;j++)
 			mapArr[i][j]=1;	
-	for(var i=6;i<=6;i++)
-		for(var j=9;j<=11;j++)
+	for(var i=r1+3;i<=r1+3;i++)
+		for(var j=r3+r4+4;j<=size/2-1;j++)
 			mapArr[i][j]=1;	
-	for(var i=8;i<=8;i++)
-		for(var j=8;j<=11;j++)
+	for(var i=r1+r2;i<=r2+r1+2;i++)
+		for(var j=r3+r4+3;j<=size/2-1;j++)
 			mapArr[i][j]=1;	
-	for(var i=10;i<=11;i++)
-		for(var j=9;j<=11;j++)
+	for(var i=size/2-2;i<=size/2-1;i++)
+		for(var j=r3+r4+4;j<=size/2-1;j++)
 			mapArr[i][j]=1;	
-
+	}
 	
-	mapArr[2][11]=1;
-	mapArr[12][10]=1;
-	mapArr[12][14]=1;
-	mapArr[13][12]=1;
+	if(size==40){
+		var r5=Math.floor(Math.random()*3+7);
+		var r6=Math.floor(Math.random()*2+5);
+		var r7=Math.floor(Math.random()*2);
+		for(var i=10+r7;i<=10+r6;i++)
+			for(var j=11+r7;j<=10+r5;j++)
+				mapArr[i][j]=1;
+		
+	}
+	
+	mapArr[Math.floor(size/12)][size/2-1]=1;
+	mapArr[size/2][size/2-2]=1;
+	mapArr[size/2][size/2+2]=1;
+	mapArr[size/2+1][size/2]=1;
 			
 	for (var i=0;i<size/2;i++){
 		for (var j=0;j<size/2;j++){
@@ -278,7 +296,7 @@ function whetherMeet(){
 		if((ghost_x[i]==x-cellSize/2)&&(ghost_y[i]==y-cellSize/2)){
 			alert("You have been catched");
 			life--;
-			if(life==0){
+			if(life<=0){
 				alert("Game Over");
 				clearInterval(refreshInterval);
 			}
@@ -467,6 +485,10 @@ function showTime(){
 	if(timeCounter%5==0){
 		timer--;
 		document.getElementById("time").innerHTML="Time: "+timer;
+		if(timer<=0){
+			alert("Time Out!");
+			clearInterval(refreshInterval);
+		}
 	}
 }
 
